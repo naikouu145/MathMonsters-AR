@@ -97,3 +97,19 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Non-default Unity packages (examples: Vuforia Engine)
+# Ignore typical Vuforia locations in Assets
+/Assets/Vuforia*
+/Assets/Plugins/Vuforia*
+/Assets/Plugins/*Vuforia*
+/Assets/StreamingAssets/Vuforia*
+
+# Ignore known Vuforia package IDs and any package folders containing "vuforia"
+# Add other package IDs (e.g. com.company.package) as needed
+/Packages/*vuforia*
+/Packages/com.ptc.vuforia*
+/Packages/com.vuforia*
+
+# If you vendor packages under Assets (embedded packages), add patterns here:
+# /Assets/Packages/*
