@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
         questionTimer -= Time.deltaTime;
         if (ui != null)
         {
-            ui.UpdateTimer(questionTimer / timeLimit);
+            ui.UpdateTimer(questionTimer, questionTimer / timeLimit);
         }
         else
         {
