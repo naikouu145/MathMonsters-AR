@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections.Generic;
 using System.Linq;
 
 public class MathQuestionManager : MonoBehaviour
 {
-    public Text questionText;
+    public TextMeshProUGUI questionText;
     public Button[] answerButtons;
 
     private int correctAnswer;
@@ -56,11 +57,11 @@ public class MathQuestionManager : MonoBehaviour
             if (answerButtons[i] == null) continue;
 
             int value = choices[i];
-            Text btnText = answerButtons[i].GetComponentInChildren<Text>();
+            TextMeshProUGUI btnText = answerButtons[i].GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
                 btnText.text = value.ToString();
             else
-                Debug.LogWarning($"Answer button at index {i} has no Text child.");
+                Debug.LogWarning($"Answer button at index {i} has no TextMeshProUGUI child.");
 
             // Ensure we capture the current value for the listener
             int captured = value;
