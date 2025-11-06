@@ -19,6 +19,16 @@ public class InitiateBattle : MonoBehaviour
                     MonsterController monster = hit.collider.GetComponent<MonsterController>();
                     if (monster != null)
                     {
+                        // Make the monster face the camera
+                        Vector3 directionToCamera = arCamera.transform.position - monster.transform.position;
+                        directionToCamera.y = 0; // Keep rotation on horizontal plane only
+                        
+                        if (directionToCamera != Vector3.zero)
+                        {
+                            Quaternion targetRotation = Quaternion.LookRotation(directionToCamera);
+                            monster.transform.rotation = targetRotation;
+                        }
+                        
                         gameManager.StartBattle(monster);
                     }
                 }

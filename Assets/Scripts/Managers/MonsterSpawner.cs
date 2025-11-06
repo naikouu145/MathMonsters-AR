@@ -5,7 +5,7 @@ public class MonsterSpawner : MonoBehaviour
     public GameObject[] monsterPrefabs;
     public int monsterCount = 3;
     public bool enableDebugLogs = true;
-    public float spawnRadius = 0.5f; // Radius around spawner to place monsters
+    public float spawnRadius = 2f; // Increased from 0.5f to 2f for more spread
     public float minHeight = 0f; // Minimum Y offset from spawner
     public float maxHeight = 0f; // Maximum Y offset from spawner
 
@@ -31,7 +31,7 @@ public class MonsterSpawner : MonoBehaviour
         {
             // Create position in a circle around the spawner
             float angle = (i / (float)monsterCount) * 360f * Mathf.Deg2Rad;
-            float distance = Random.Range(0.2f, spawnRadius);
+            float distance = Random.Range(spawnRadius * 0.5f, spawnRadius); // More consistent spread using larger range
             
             Vector3 offset = new Vector3(
                 Mathf.Cos(angle) * distance,

@@ -9,12 +9,21 @@ public class MonsterController : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth = 100; // Made public for debugging, defaults to maxHealth
     public Image healthBarFill; // Assign in Inspector - should be an Image with Fill type
+    public float attackAnimationDuration = 1.5f; // Duration of attack animation
+    public float attackMoveDistance = 0.5f; // How far forward the monster moves during attack
+    public float attackMoveSpeed = 2f; // Speed of forward movement
 
     private Animator anim;
+    private GameManager gameManager;
+    private Vector3 originalPosition; // Store original position
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        gameManager = FindObjectOfType<GameManager>();
+        
+        // Store original position
+        originalPosition = transform.position;
         
         // Always reset currentHealth to maxHealth at start
         currentHealth = maxHealth;
@@ -36,6 +45,77 @@ public class MonsterController : MonoBehaviour
         }
         
         UpdateHealthBar();
+    }
+
+    public void PerformAttack()
+    {
+        StartCoroutine(AttackSequence());
+    }
+
+    private IEnumerator AttackSequence()
+    {
+        // Store current position as original before attack
+        originalPosition = transform.position;
+        
+        // Pause battle and hide UI
+        if (gameManager != null)
+        {
+            gameManager.PauseBattle();
+        }
+
+        // Play attack animation
+        if (anim != null)
+        {
+            anim.SetTrigger("Attack");
+        }
+        else
+        {
+            Debug.LogWarning($"Monster '{gameObject.name}' has no Animator. Skipping Attack trigger.");
+        }
+
+        // Move forward towards camera
+        Vector3 targetPosition = originalPosition + transform.forward * attackMoveDistance;
+        float moveTimer = 0f;
+        float moveDuration = attackAnimationDuration * 0.3f; // Move during first 30% of animation
+        
+        while (moveTimer < moveDuration)
+        {
+            moveTimer += Time.deltaTime;
+            float progress = moveTimer / moveDuration;
+            transform.position = Vector3.Lerp(originalPosition, targetPosition, progress);
+            yield return null;
+        }
+
+        // Hold position briefly
+        yield return new WaitForSeconds(attackAnimationDuration * 0.4f); // Hold for 40% of animation
+
+        // Move back to original position
+        moveTimer = 0f;
+        float returnDuration = attackAnimationDuration * 0.3f; // Return during last 30% of animation
+        Vector3 currentPos = transform.position;
+        
+        while (moveTimer < returnDuration)
+        {
+            moveTimer += Time.deltaTime;
+            float progress = moveTimer / returnDuration;
+            transform.position = Vector3.Lerp(currentPos, originalPosition, progress);
+            yield return null;
+        }
+        
+        // Ensure we're exactly at original position
+        transform.position = originalPosition;
+
+        // Return to idle
+        if (anim != null)
+        {
+            anim.SetTrigger("Idle");
+        }
+
+        // Resume battle and show UI
+        if (gameManager != null)
+        {
+            gameManager.ResumeBattle();
+        }
     }
 
     public void TakeDamage(int dmg)
@@ -95,10 +175,9 @@ public class MonsterController : MonoBehaviour
             Debug.LogWarning($"{nameof(MonsterController)} on '{gameObject.name}' has no Animator. Skipping Die trigger.");
         }
 
-        var gm = FindObjectOfType<GameManager>();
-        if (gm != null)
+        if (gameManager != null)
         {
-            gm.OnMonsterDefeated(this);
+            gameManager.OnMonsterDefeated(this);
         }
         else
         {

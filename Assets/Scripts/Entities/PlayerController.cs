@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -45,6 +46,13 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
+    }
+
+    public void HealToFull()
+    {
+        currentHealth = maxHealth;
+        UpdateHealthBar();
+        Debug.Log("Player healed to full health!");
     }
 
     private void UpdateHealthBar()

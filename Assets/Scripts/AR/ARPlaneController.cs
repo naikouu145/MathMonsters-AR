@@ -8,6 +8,7 @@ public class ARPlaneController : MonoBehaviour
     public bool enableDebugLogs = true;
     public bool spawnOnFirstDetection = true; // Spawn automatically on first plane detection
     public bool requireTapToPlace = false; // If true, user must tap to place monsters
+    public GameObject[] objectsToHideAfterSpawn; // Array of objects to hide when monsters spawn
     private bool planeDetected = false;
     private bool monstersSpawned = false;
     private PlaneFinderBehaviour planeFinder;
@@ -110,6 +111,9 @@ public class ARPlaneController : MonoBehaviour
         
         Debug.Log($"Spawned {spawner.monsterCount} monsters successfully.");
 
+        // Hide specified objects after spawning
+        HideObjects();
+
         // Optionally disable plane finder visualization after spawning
         if (planeFinder != null)
         {
@@ -140,5 +144,23 @@ public class ARPlaneController : MonoBehaviour
         Debug.Log("Manual spawn triggered!");
         monstersSpawned = true;
         spawner.SpawnInitialMonsters();
+        
+        // Hide specified objects after spawning
+        HideObjects();
+    }
+
+    private void HideObjects()
+    {
+        if (objectsToHideAfterSpawn != null && objectsToHideAfterSpawn.Length > 0)
+        {
+            foreach (GameObject obj in objectsToHideAfterSpawn)
+            {
+                if (obj != null)
+                {
+                    obj.SetActive(false);
+                    if (enableDebugLogs) Debug.Log($"Hidden object: {obj.name}");
+                }
+            }
+        }
     }
 }
