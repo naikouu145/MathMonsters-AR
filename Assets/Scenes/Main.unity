@@ -1578,6 +1578,7 @@ MonoBehaviour:
   requireTapToPlace: 0
   objectsToHideAfterSpawn:
   - {fileID: 1003954805}
+  respawnCheckInterval: 2
 --- !u!1 &654226341
 GameObject:
   m_ObjectHideFlags: 0
@@ -2394,9 +2395,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterPrefabs:
   - {fileID: 324503184018405221, guid: 6f64e24a29a02514fa0ac1ad26db8c69, type: 3}
-  monsterCount: 3
+  - {fileID: 324503184018405221, guid: 6f64e24a29a02514fa0ac1ad26db8c69, type: 3}
+  - {fileID: 6739249341927431235, guid: 023f26fb14d90af449a0fdc26b619248, type: 3}
+  - {fileID: 6347859004065603383, guid: 3382df47baecc5f4797ed79842a717bd, type: 3}
+  - {fileID: 1934353275905694558, guid: 121e01af9fe64f94d970ed57627d1a21, type: 3}
+  monsterCount: 5
   enableDebugLogs: 1
-  spawnRadius: 0.5
+  spawnRadius: 5
   minHeight: 0
   maxHeight: 0
 --- !u!1 &1438864705

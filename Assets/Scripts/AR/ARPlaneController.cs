@@ -9,10 +9,12 @@ public class ARPlaneController : MonoBehaviour
     public bool spawnOnFirstDetection = true; // Spawn automatically on first plane detection
     public bool requireTapToPlace = false; // If true, user must tap to place monsters
     public GameObject[] objectsToHideAfterSpawn; // Array of objects to hide when monsters spawn
+    public float respawnCheckInterval = 2f; // How often to check if monsters need respawning
     private bool planeDetected = false;
     private bool monstersSpawned = false;
     private PlaneFinderBehaviour planeFinder;
     private ContentPositioningBehaviour contentPositioning;
+    private float nextRespawnCheck = 0f;
 
     void Start()
     {
@@ -59,6 +61,16 @@ public class ARPlaneController : MonoBehaviour
         {
             planeFinder.OnInteractiveHitTest.RemoveListener(OnInteractiveHitTest);
             planeFinder.OnAutomaticHitTest.RemoveListener(OnAutomaticHitTest);
+        }
+    }
+
+    void Update()
+    {
+        // Check if we need to respawn monsters
+        if (planeDetected && monstersSpawned && Time.time >= nextRespawnCheck)
+        {
+            nextRespawnCheck = Time.time + respawnCheckInterval;
+            CheckAndRespawnMonsters();
         }
     }
 
@@ -160,6 +172,28 @@ public class ARPlaneController : MonoBehaviour
                     obj.SetActive(false);
                     if (enableDebugLogs) Debug.Log($"Hidden object: {obj.name}");
                 }
+            }
+        }
+    }
+
+    private void CheckAndRespawnMonsters()
+    {
+        // Check if any monsters still exist
+        GameObject[] existingMonsters = GameObject.FindGameObjectsWithTag("Monster");
+        
+        if (existingMonsters.Length == 0)
+        {
+            if (enableDebugLogs) Debug.Log("No monsters found. Respawning monsters...");
+            
+            // Respawn monsters at the spawner's current position
+            if (spawner != null)
+            {
+                spawner.SpawnInitialMonsters();
+                Debug.Log($"Respawned {spawner.monsterCount} monsters successfully.");
+            }
+            else
+            {
+                Debug.LogError("Cannot respawn: MonsterSpawner is null!");
             }
         }
     }

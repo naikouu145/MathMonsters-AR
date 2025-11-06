@@ -284,6 +284,18 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("Battle ended.");
+        
+        // Trigger a check for monster respawning after a short delay
+        StartCoroutine(CheckForRespawn());
+    }
+
+    private IEnumerator CheckForRespawn()
+    {
+        // Wait a moment to ensure battle cleanup is complete
+        yield return new WaitForSeconds(0.5f);
+        
+        // The ARPlaneController will handle respawning via its Update loop
+        Debug.Log("Battle cleanup complete. ARPlaneController will handle respawning if needed.");
     }
 
     // Score management methods
